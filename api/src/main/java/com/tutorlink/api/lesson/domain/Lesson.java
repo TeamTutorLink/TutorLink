@@ -48,4 +48,9 @@ public class Lesson {
 //    @Column(name = "user_id", nullable = false)
     @Transient
     int userId;
+
+    //    @NonNull
+//    @Column(name = "user_name", nullable = false)
+    @Transient
+    String userName;
 }

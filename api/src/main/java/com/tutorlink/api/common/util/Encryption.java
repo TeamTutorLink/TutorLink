@@ -14,7 +14,6 @@ public class Encryption {
     private String salt;
 
     public String SHA256(String plainText) throws NoSuchAlgorithmException, UnsupportedEncodingException {
-        System.out.println(salt);
         MessageDigest md = MessageDigest.getInstance("SHA-256");
         byte[] digest = md.digest((plainText + salt).getBytes("UTF-8"));
         StringBuffer sb = new StringBuffer();
