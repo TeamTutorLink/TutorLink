@@ -2,7 +2,7 @@ package com.tutorlink.api.auth.controller;
 
 import com.tutorlink.api.auth.dto.KakaoTokenInfo;
 import com.tutorlink.api.auth.dto.KakaoUserInfo;
-import com.tutorlink.api.auth.dto.request.LoginReq;
+import com.tutorlink.api.auth.dto.request.KakaoLoginReq;
 import com.tutorlink.api.auth.dto.response.LoginRes;
 import com.tutorlink.api.auth.jwt.JwtTokenProvider;
 import com.tutorlink.api.auth.service.KakaoAuthService;
@@ -31,7 +31,7 @@ public class AuthController {
     private final JwtTokenProvider jwtTokenProvider;
 
     @PostMapping("/kakao-login")
-    public ResponseEntity<Object> kakaoLogin(@RequestBody @Valid LoginReq req) throws Exception {
+    public ResponseEntity<Object> kakaoLogin(@RequestBody @Valid KakaoLoginReq req) throws Exception {
         String code = req.getCode();
 
         KakaoTokenInfo kakaoTokenInfo = kakaoAuthService.sendCode(code);

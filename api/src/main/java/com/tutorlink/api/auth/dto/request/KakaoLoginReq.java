@@ -7,7 +7,6 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class LoginReq {
+public class KakaoLoginReq {
     String code;
-    String state;
 }
