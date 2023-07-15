@@ -1,7 +1,10 @@
+import org.asciidoctor.gradle.jvm.AsciidoctorJExtension
+
 plugins {
     java
     id("org.springframework.boot") version "2.7.12"
     id("io.spring.dependency-management") version "1.0.15.RELEASE"
+    id("org.asciidoctor.jvm.convert") version "3.3.2"
 }
 
 group = "com.tutorlink"
@@ -32,8 +35,34 @@ dependencies {
     runtimeOnly("com.mysql:mysql-connector-j")
     annotationProcessor("org.projectlombok:lombok")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("org.springframework.restdocs:spring-restdocs-mockmvc")
 }
 
-tasks.withType<Test> {
-    useJUnitPlatform()
+val snippetsDir by extra { file("build/generated-snippets") }
+
+tasks {
+    test {
+        outputs.dir(snippetsDir)
+    }
+
+    asciidoctor {
+        dependsOn(test)
+
+        doFirst {
+            delete(file("src/main/resources/static/docs"))
+        }
+
+        inputs.dir(snippetsDir)
+
+        doLast {
+            copy {
+                from("build/docs/asciidoc")
+                into("src/main/resources/static/docs")
+            }
+        }
+    }
+
+    build {
+        dependsOn(asciidoctor)
+    }
 }
