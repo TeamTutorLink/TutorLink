@@ -44,13 +44,11 @@ public class Lesson {
     @Temporal(TemporalType.TIMESTAMP)
     Date createTime;
 
-//    @NonNull
-//    @Column(name = "user_id", nullable = false)
-    @Transient
+    @NonNull
+    @Column(name = "user_id", nullable = false)
     int userId;
 
-    //    @NonNull
-//    @Column(name = "user_name", nullable = false)
-    @Transient
+    @NonNull
+    @Column(name = "user_name", nullable = false)
     String userName;
 }

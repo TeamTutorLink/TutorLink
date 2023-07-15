@@ -9,8 +9,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface LessonRepository extends JpaRepository<Lesson, Integer> {
 
-    Lesson findByLessonId(int lessonId);
-
     Page<Lesson> findByTitleContaining(String keyword, Pageable pageable);
 
     Page<Lesson> findByUserName(String keyword, Pageable pageable);

@@ -1,4 +1,4 @@
-package com.tutorlink.api.lesson.domain;
+package com.tutorlink.api.common.domain;
 
 import lombok.*;
 

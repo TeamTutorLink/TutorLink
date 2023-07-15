@@ -1,11 +1,12 @@
 package com.tutorlink.api.lesson.controller;
 
-import com.tutorlink.api.lesson.dto.request.AddLessonReq;
-import com.tutorlink.api.lesson.dto.request.GetLessonListReq;
-import com.tutorlink.api.lesson.dto.request.SearchLessonReq;
-import com.tutorlink.api.lesson.dto.request.UpdateLessonReq;
+import com.tutorlink.api.lesson.dto.request.*;
+import com.tutorlink.api.lesson.dto.response.GetLessonListLoginRes;
 import com.tutorlink.api.lesson.dto.response.GetLessonListRes;
+import com.tutorlink.api.lesson.dto.response.SearchLessonLoginRes;
 import com.tutorlink.api.lesson.dto.response.SearchLessonRes;
+import com.tutorlink.api.lesson.exception.NotTeacherException;
+import com.tutorlink.api.lesson.exception.UserNotMatchingException;
 import com.tutorlink.api.lesson.service.LessonService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.UrlResource;
@@ -16,6 +17,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import java.io.IOException;
@@ -24,7 +26,6 @@ import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.List;
 
-// TODO 유저 정보 받는 부분 추가해야함
 @RestController
 @RequestMapping("/lessons")
 @RequiredArgsConstructor
@@ -34,12 +35,24 @@ public class LessonController {
     private final LessonService lessonService;
 
     @PostMapping
-    public ResponseEntity<Object> addLesson(@RequestPart @Valid AddLessonReq req,
-                                            @RequestPart @Nullable MultipartFile imageFile) throws IOException, NoSuchAlgorithmException {
+    public ResponseEntity<Object> addLesson(HttpServletRequest servletRequest,
+                                            @RequestPart @Valid AddLessonReq req,
+                                            @RequestPart @Nullable MultipartFile imageFile) throws IOException, NoSuchAlgorithmException, NotTeacherException {
 
-        lessonService.addLesson(req, imageFile);
+        int userId = (int) servletRequest.getAttribute("userId");
+        lessonService.addLesson(userId, req, imageFile);
 
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/login")
+    public ResponseEntity<Object> getLessonListLogin(HttpServletRequest servletRequest,
+                                                     @RequestBody @Valid GetLessonListLoginReq req) {
+
+        int userId = (int) servletRequest.getAttribute("userId");
+        List<GetLessonListLoginRes> resList = lessonService.getLessonListLogin(userId, req);
+
+        return ResponseEntity.ok(resList);
     }
 
     @GetMapping
@@ -47,7 +60,7 @@ public class LessonController {
 
         List<GetLessonListRes> resList = lessonService.getLessonList(req);
 
-        return ResponseEntity.ok().body(resList);
+        return ResponseEntity.ok(resList);
     }
 
     @GetMapping("/{lessonId}/image-file")
@@ -63,40 +76,14 @@ public class LessonController {
                 .body(res);
     }
 
-    @PutMapping("/{lessonId}")
-    public ResponseEntity<Object> updateLesson(@PathVariable @Min(1) int lessonId,
-                                               @RequestPart @Valid UpdateLessonReq req,
-                                               @RequestPart @Nullable MultipartFile imageFile) {
+    @GetMapping("/search/login")
+    public ResponseEntity<Object> searchLessonLogin(HttpServletRequest servletRequest,
+                                                    @RequestBody @Valid SearchLessonLoginReq req) {
 
-        lessonService.updateLesson(lessonId, req, imageFile);
+        int userId = (int) servletRequest.getAttribute("userId");
+        List<SearchLessonLoginRes> resList = lessonService.searchLessonLogin(userId, req);
 
-        return ResponseEntity.ok().build();
-    }
-
-    @DeleteMapping("/{lessonId}")
-    public ResponseEntity<Object> deleteLesson(@PathVariable @Min(1) int lessonId) {
-
-        lessonService.deleteLesson(lessonId);
-
-        return ResponseEntity.ok().build();
-    }
-
-    // TODO 강의 좋아요
-    @PostMapping("/{lessonId}/like")
-    public ResponseEntity<Object> likeLesson(@PathVariable @Min(1) int lessonId) {
-
-        lessonService.likeLesson(lessonId);
-
-        return ResponseEntity.ok().build();
-    }
-
-    // TODO 강의 좋아요 취소
-    @PostMapping("/{lessonId}/cancel-like")
-    public ResponseEntity<Object> cancelLikeLesson(@PathVariable @Min(1) int lessonId) {
-
-        lessonService.cancelLikeLesson(lessonId);
-
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok().body(resList);
     }
 
     @GetMapping("/search")
@@ -107,4 +94,45 @@ public class LessonController {
         return ResponseEntity.ok().body(resList);
     }
 
+    @PutMapping("/{lessonId}")
+    public ResponseEntity<Object> updateLesson(HttpServletRequest servletRequest,
+                                               @PathVariable @Min(1) int lessonId,
+                                               @RequestPart @Valid UpdateLessonReq req,
+                                               @RequestPart @Nullable MultipartFile imageFile) throws UserNotMatchingException, IOException, NoSuchAlgorithmException {
+
+        int userId = (int) servletRequest.getAttribute("userId");
+        lessonService.updateLesson(userId, lessonId, req, imageFile);
+
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/{lessonId}")
+    public ResponseEntity<Object> deleteLesson(HttpServletRequest servletRequest,
+                                               @PathVariable @Min(1) int lessonId) throws UserNotMatchingException {
+
+        int userId = (int) servletRequest.getAttribute("userId");
+        lessonService.deleteLesson(userId, lessonId);
+
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/{lessonId}/like")
+    public ResponseEntity<Object> likeLesson(HttpServletRequest servletRequest,
+                                             @PathVariable @Min(1) int lessonId) {
+
+        int userId = (int) servletRequest.getAttribute("userId");
+        lessonService.likeLesson(userId, lessonId);
+
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/{lessonId}/cancel-like")
+    public ResponseEntity<Object> cancelLikeLesson(HttpServletRequest servletRequest,
+                                                   @PathVariable @Min(1) int lessonId) {
+
+        int userId = (int) servletRequest.getAttribute("userId");
+        lessonService.cancelLikeLesson(userId, lessonId);
+
+        return ResponseEntity.ok().build();
+    }
 }

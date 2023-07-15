@@ -7,9 +7,10 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class GetLessonListRes {
+public class SearchLessonLoginRes {
     int lessonId;
     String title;
     String userName;
+    boolean likeLesson;
     int likeCount;
 }

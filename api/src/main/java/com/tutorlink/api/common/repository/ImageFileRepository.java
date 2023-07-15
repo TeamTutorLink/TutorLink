@@ -1,6 +1,6 @@
-package com.tutorlink.api.lesson.repository;
+package com.tutorlink.api.common.repository;
 
-import com.tutorlink.api.lesson.domain.ImageFile;
+import com.tutorlink.api.common.domain.ImageFile;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
