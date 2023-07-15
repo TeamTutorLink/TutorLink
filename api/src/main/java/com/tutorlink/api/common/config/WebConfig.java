@@ -21,7 +21,7 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addInterceptor(new LoginInterceptor(jwtTokenProvider, userRepository))
                 .order(0)
                 .addPathPatterns("/**")
-                .excludePathPatterns("/test", "/auth/kakao-login", "/lessons", "/lessons/*/image-file", "/lessons/search");
+                .excludePathPatterns("/test", "/auth/kakao-login", "/lessons/*/image-file", "/lessons/search", "/docs/**");
     }
 
     @Override

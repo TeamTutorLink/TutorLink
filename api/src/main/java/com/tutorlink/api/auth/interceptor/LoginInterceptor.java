@@ -1,6 +1,7 @@
 package com.tutorlink.api.auth.interceptor;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.tutorlink.api.auth.annotation.LoginRequired;
 import com.tutorlink.api.auth.dto.response.LoginRes;
 import com.tutorlink.api.auth.jwt.JwtTokenProvider;
 import com.tutorlink.api.common.error.ErrorResponse;
@@ -9,10 +10,12 @@ import com.tutorlink.api.user.repository.UserRepository;
 import io.jsonwebtoken.ExpiredJwtException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Objects;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -23,6 +26,12 @@ public class LoginInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        HandlerMethod handlerMethod = (HandlerMethod) handler;
+        LoginRequired loginRequired = handlerMethod.getMethodAnnotation(LoginRequired.class);
+        if (Objects.isNull(loginRequired)) {
+            return true;
+        }
+
         String accessToken = request.getHeader("accessToken");
         String refreshToken = request.getHeader("refreshToken");
 

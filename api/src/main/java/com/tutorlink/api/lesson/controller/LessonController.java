@@ -1,5 +1,6 @@
 package com.tutorlink.api.lesson.controller;
 
+import com.tutorlink.api.auth.annotation.LoginRequired;
 import com.tutorlink.api.lesson.dto.request.*;
 import com.tutorlink.api.lesson.dto.response.GetLessonListLoginRes;
 import com.tutorlink.api.lesson.dto.response.GetLessonListRes;
@@ -35,6 +36,7 @@ public class LessonController {
     private final LessonService lessonService;
 
     @PostMapping
+    @LoginRequired
     public ResponseEntity<Object> addLesson(HttpServletRequest servletRequest,
                                             @RequestPart @Valid AddLessonReq req,
                                             @RequestPart @Nullable MultipartFile imageFile) throws IOException, NoSuchAlgorithmException, NotTeacherException {
@@ -46,6 +48,7 @@ public class LessonController {
     }
 
     @GetMapping("/login")
+    @LoginRequired
     public ResponseEntity<Object> getLessonListLogin(HttpServletRequest servletRequest,
                                                      @RequestBody @Valid GetLessonListLoginReq req) {
 
@@ -77,6 +80,7 @@ public class LessonController {
     }
 
     @GetMapping("/search/login")
+    @LoginRequired
     public ResponseEntity<Object> searchLessonLogin(HttpServletRequest servletRequest,
                                                     @RequestBody @Valid SearchLessonLoginReq req) {
 
@@ -95,6 +99,7 @@ public class LessonController {
     }
 
     @PutMapping("/{lessonId}")
+    @LoginRequired
     public ResponseEntity<Object> updateLesson(HttpServletRequest servletRequest,
                                                @PathVariable @Min(1) int lessonId,
                                                @RequestPart @Valid UpdateLessonReq req,
@@ -107,6 +112,7 @@ public class LessonController {
     }
 
     @DeleteMapping("/{lessonId}")
+    @LoginRequired
     public ResponseEntity<Object> deleteLesson(HttpServletRequest servletRequest,
                                                @PathVariable @Min(1) int lessonId) throws UserNotMatchingException {
 
@@ -117,6 +123,7 @@ public class LessonController {
     }
 
     @PostMapping("/{lessonId}/like")
+    @LoginRequired
     public ResponseEntity<Object> likeLesson(HttpServletRequest servletRequest,
                                              @PathVariable @Min(1) int lessonId) {
 
@@ -127,6 +134,7 @@ public class LessonController {
     }
 
     @PostMapping("/{lessonId}/cancel-like")
+    @LoginRequired
     public ResponseEntity<Object> cancelLikeLesson(HttpServletRequest servletRequest,
                                                    @PathVariable @Min(1) int lessonId) {
 
