@@ -1,0 +1,151 @@
+ifndef::snippets[]
+:snippets: ./build/generated-snippets
+endif::[]
+
+= TUTORLINK API
+:sectnums:
+:toc: left
+:toclevels: 4
+:toc-title: Table of Contents
+:source-highlighter: prettify
+
+== User
+=== 카카오 로그인
+DESCRIPTION
+```
+
+```
+REQUEST
+
+include::{snippets}/kakaoLogin/http-request.adoc[]
+
+RESPONSE
+
+include::{snippets}/kakaoLogin/http-response.adoc[]
+
+== Lesson
+=== 강의 추가
+DESCRIPTION
+```
+
+```
+REQUEST
+
+include::{snippets}/addLesson/http-request.adoc[]
+
+RESPONSE
+
+include::{snippets}/addLesson/http-response.adoc[]
+
+=== 로그인 사용자 강의 리스트
+DESCRIPTION
+```
+
+```
+REQUEST
+
+include::{snippets}/getLessonListLogin/http-request.adoc[]
+
+RESPONSE
+
+include::{snippets}/getLessonListLogin/http-response.adoc[]
+
+=== 강의 리스트
+DESCRIPTION
+```
+
+```
+REQUEST
+
+include::{snippets}/getLessonList/http-request.adoc[]
+
+RESPONSE
+
+include::{snippets}/getLessonList/http-response.adoc[]
+
+=== 이미지 다운로드
+DESCRIPTION
+```
+
+```
+REQUEST
+
+include::{snippets}/downloadImageFile/http-request.adoc[]
+
+=== 로그인 사용자 강의 검색
+DESCRIPTION
+```
+
+```
+REQUEST
+
+include::{snippets}/searchLessonLogin/http-request.adoc[]
+
+RESPONSE
+
+include::{snippets}/searchLessonLogin/http-response.adoc[]
+
+=== 강의 검색
+DESCRIPTION
+```
+
+```
+REQUEST
+
+include::{snippets}/searchLesson/http-request.adoc[]
+
+RESPONSE
+
+include::{snippets}/searchLesson/http-response.adoc[]
+
+=== 강의 수정
+DESCRIPTION
+```
+
+```
+REQUEST
+
+include::{snippets}/updateLesson/http-request.adoc[]
+
+RESPONSE
+
+include::{snippets}/updateLesson/http-response.adoc[]
+
+=== 강의 삭제
+DESCRIPTION
+```
+
+```
+REQUEST
+
+include::{snippets}/deleteLesson/http-request.adoc[]
+
+RESPONSE
+
+include::{snippets}/deleteLesson/http-response.adoc[]
+
+=== 강의 추천
+DESCRIPTION
+```
+
+```
+REQUEST
+
+include::{snippets}/likeLesson/http-request.adoc[]
+
+RESPONSE
+
+include::{snippets}/likeLesson/http-response.adoc[]
+
+=== 강의 추천 취소
+DESCRIPTION
+```
+
+```
+REQUEST
+
+include::{snippets}/cancelLikeLesson/http-request.adoc[]
+
+RESPONSE
+
+include::{snippets}/cancelLikeLesson/http-response.adoc[]
