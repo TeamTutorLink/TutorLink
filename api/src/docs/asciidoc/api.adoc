@@ -13,7 +13,7 @@ endif::[]
 === 카카오 로그인
 DESCRIPTION
 ```
-
+code : 카카오 서버에서 받은 인가 코드
 ```
 REQUEST
 
@@ -27,7 +27,7 @@ include::{snippets}/kakaoLogin/http-response.adoc[]
 === 강의 추가
 DESCRIPTION
 ```
-
+강의 정보, 강의 이미지
 ```
 REQUEST
 
@@ -40,7 +40,8 @@ include::{snippets}/addLesson/http-response.adoc[]
 === 로그인 사용자 강의 리스트
 DESCRIPTION
 ```
-
+로그인한 사용자의 강의 리스트 요청(요청 사용자가 강의 좋아요 눌렀는지를 포함)
+헤더에 jwt 토큰을 담아야 함
 ```
 REQUEST
 
@@ -53,7 +54,7 @@ include::{snippets}/getLessonListLogin/http-response.adoc[]
 === 강의 리스트
 DESCRIPTION
 ```
-
+로그인 안 한 사용자의 강의 리스트 요청
 ```
 REQUEST
 
@@ -63,10 +64,10 @@ RESPONSE
 
 include::{snippets}/getLessonList/http-response.adoc[]
 
-=== 이미지 다운로드
+=== 강의 이미지 다운로드
 DESCRIPTION
 ```
-
+/lessons/{lessonId}/image-file
 ```
 REQUEST
 
@@ -75,7 +76,12 @@ include::{snippets}/downloadImageFile/http-request.adoc[]
 === 로그인 사용자 강의 검색
 DESCRIPTION
 ```
+로그인한 사용자의 강의 검색 요청(요청 사용자가 강의 좋아요 눌렀는지를 포함)
+헤더에 jwt 토큰을 담아야 함
 
+type
+0 : 제목 검색(포함 여부)
+1 : 강사 검색(일치 여부)
 ```
 REQUEST
 
@@ -88,7 +94,11 @@ include::{snippets}/searchLessonLogin/http-response.adoc[]
 === 강의 검색
 DESCRIPTION
 ```
+로그인 안 한 사용자의 강의 검색 요청
 
+type
+0 : 제목 검색(포함 여부)
+1 : 강사 검색(일치 여부)
 ```
 REQUEST
 
@@ -101,7 +111,8 @@ include::{snippets}/searchLesson/http-response.adoc[]
 === 강의 수정
 DESCRIPTION
 ```
-
+/lessons/{lessonId}
+강의 정보, 강의 이미지
 ```
 REQUEST
 
@@ -114,7 +125,7 @@ include::{snippets}/updateLesson/http-response.adoc[]
 === 강의 삭제
 DESCRIPTION
 ```
-
+/lessons/{lessonId}
 ```
 REQUEST
 
@@ -127,7 +138,7 @@ include::{snippets}/deleteLesson/http-response.adoc[]
 === 강의 추천
 DESCRIPTION
 ```
-
+/lessons/{lessonId}/like
 ```
 REQUEST
 
@@ -140,7 +151,7 @@ include::{snippets}/likeLesson/http-response.adoc[]
 === 강의 추천 취소
 DESCRIPTION
 ```
-
+/lessons/{lessonId}/cancel-like
 ```
 REQUEST
 
