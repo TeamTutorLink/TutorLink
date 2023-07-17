@@ -455,7 +455,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_강의_추가">2.1. 강의 추가</a></li>
 <li><a href="#_로그인_사용자_강의_리스트">2.2. 로그인 사용자 강의 리스트</a></li>
 <li><a href="#_강의_리스트">2.3. 강의 리스트</a></li>
-<li><a href="#_이미지_다운로드">2.4. 이미지 다운로드</a></li>
+<li><a href="#_강의_이미지_다운로드">2.4. 강의 이미지 다운로드</a></li>
 <li><a href="#_로그인_사용자_강의_검색">2.5. 로그인 사용자 강의 검색</a></li>
 <li><a href="#_강의_검색">2.6. 강의 검색</a></li>
 <li><a href="#_강의_수정">2.7. 강의 수정</a></li>
@@ -478,7 +478,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code></code></pre>
+<pre class="prettyprint highlight"><code>code : 카카오 서버에서 받은 인가 코드</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -527,7 +527,7 @@ Content-Length: 304
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code></code></pre>
+<pre class="prettyprint highlight"><code>강의 정보, 강의 이미지</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -571,7 +571,8 @@ Vary: Access-Control-Request-Headers</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code></code></pre>
+<pre class="prettyprint highlight"><code>로그인한 사용자의 강의 리스트 요청(요청 사용자가 강의 좋아요 눌렀는지를 포함)
+헤더에 jwt 토큰을 담아야 함</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -643,7 +644,7 @@ Content-Length: 607
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code></code></pre>
+<pre class="prettyprint highlight"><code>로그인 안 한 사용자의 강의 리스트 요청</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -703,13 +704,13 @@ Content-Length: 482
 </div>
 </div>
 <div class="sect2">
-<h3 id="_이미지_다운로드">2.4. 이미지 다운로드</h3>
+<h3 id="_강의_이미지_다운로드">2.4. 강의 이미지 다운로드</h3>
 <div class="paragraph">
 <p>DESCRIPTION</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code></code></pre>
+<pre class="prettyprint highlight"><code>/lessons/{lessonId}/image-file</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -729,7 +730,12 @@ Host: localhost:8080</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code></code></pre>
+<pre class="prettyprint highlight"><code>로그인한 사용자의 강의 검색 요청(요청 사용자가 강의 좋아요 눌렀는지를 포함)
+헤더에 jwt 토큰을 담아야 함
+
+type
+0 : 제목 검색(포함 여부)
+1 : 강사 검색(일치 여부)</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -803,7 +809,11 @@ Content-Length: 607
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code></code></pre>
+<pre class="prettyprint highlight"><code>로그인 안 한 사용자의 강의 검색 요청
+
+type
+0 : 제목 검색(포함 여부)
+1 : 강사 검색(일치 여부)</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -871,7 +881,8 @@ Content-Length: 482
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code></code></pre>
+<pre class="prettyprint highlight"><code>/lessons/{lessonId}
+강의 정보, 강의 이미지</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -915,7 +926,7 @@ Vary: Access-Control-Request-Headers</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code></code></pre>
+<pre class="prettyprint highlight"><code>/lessons/{lessonId}</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -947,7 +958,7 @@ Vary: Access-Control-Request-Headers</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code></code></pre>
+<pre class="prettyprint highlight"><code>/lessons/{lessonId}/like</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -979,7 +990,7 @@ Vary: Access-Control-Request-Headers</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code></code></pre>
+<pre class="prettyprint highlight"><code>/lessons/{lessonId}/cancel-like</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1010,7 +1021,7 @@ Vary: Access-Control-Request-Headers</code></pre>
 <div id="footer">
 <div id="footer-text">
 Version 0.0.1-SNAPSHOT<br>
-Last updated 2023-07-15 15:44:37 +0900
+Last updated 2023-07-17 12:15:23 +0900
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css">
