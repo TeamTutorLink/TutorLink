@@ -10,6 +10,8 @@ import com.tutorlink.api.lesson.dto.response.GetLessonListLoginRes;
 import com.tutorlink.api.lesson.dto.response.GetLessonListRes;
 import com.tutorlink.api.lesson.dto.response.SearchLessonLoginRes;
 import com.tutorlink.api.lesson.dto.response.SearchLessonRes;
+import com.tutorlink.api.lesson.exception.ImageNotFoundException;
+import com.tutorlink.api.lesson.exception.LessonNotFoundException;
 import com.tutorlink.api.lesson.exception.NotTeacherException;
 import com.tutorlink.api.lesson.exception.UserNotMatchingException;
 import com.tutorlink.api.lesson.repository.LessonRepository;
@@ -50,8 +52,8 @@ public class LessonServiceImpl implements LessonService {
     @Override
     @Transactional
     public Lesson addLesson(int userId, AddLessonReq req, MultipartFile imageFile) throws IOException, NoSuchAlgorithmException, NotTeacherException {
-        User user = userRepository.findById(userId).get();
-        if (user.getUserType() != UserType.TEACHER) {
+        Optional<User> userOpt = userRepository.findById(userId);
+        if (userOpt.get().getUserType() != UserType.TEACHER) {
             throw new NotTeacherException();
         }
         Lesson lesson = new Lesson();
@@ -59,7 +61,7 @@ public class LessonServiceImpl implements LessonService {
         lesson.setPassword(encryption.SHA256(lesson.getPassword()));
         lesson.setCreateTime(new Date());
         lesson.setUserId(userId);
-        lesson.setUserName(user.getUserName());
+        lesson.setUserName(userOpt.get().getUserName());
 
         if (imageFile != null) {
             String uploadFileName = imageFile.getOriginalFilename();
@@ -119,12 +121,18 @@ public class LessonServiceImpl implements LessonService {
     }
 
     @Override
-    public HashMap<String, Object> downloadImageFile(int lessonId) throws MalformedURLException {
-        Lesson lesson = lessonRepository.findById(lessonId).get();
+    public HashMap<String, Object> downloadImageFile(int lessonId) throws MalformedURLException, ImageNotFoundException, LessonNotFoundException {
+        Optional<Lesson> lesson = lessonRepository.findById(lessonId);
+        if (lesson.isEmpty()) {
+            throw new LessonNotFoundException();
+        }
+        if (lesson.get().getImage() == null) {
+            throw new ImageNotFoundException();
+        }
 
         HashMap<String, Object> res = new HashMap<>();
-        res.put("urlResource", new UrlResource("file:" + imageFileDir + lesson.getImage()));
-        res.put("ext", extractExt(lesson.getImage()));
+        res.put("urlResource", new UrlResource("file:" + imageFileDir + lesson.get().getImage()));
+        res.put("ext", extractExt(lesson.get().getImage()));
 
         return res;
     }
@@ -193,13 +201,16 @@ public class LessonServiceImpl implements LessonService {
 
     @Override
     @Transactional
-    public Lesson updateLesson(int userId, int lessonId, UpdateLessonReq req, MultipartFile imageFile) throws UserNotMatchingException, IOException, NoSuchAlgorithmException {
-        Lesson lesson = lessonRepository.findById(lessonId).get();
-        if (lesson.getUserId() != userId) {
+    public Lesson updateLesson(int userId, int lessonId, UpdateLessonReq req, MultipartFile imageFile) throws UserNotMatchingException, IOException, NoSuchAlgorithmException, LessonNotFoundException {
+        Optional<Lesson> lessonOpt = lessonRepository.findById(lessonId);
+        if (lessonOpt.isEmpty()) {
+            throw new LessonNotFoundException();
+        }
+        if (lessonOpt.get().getUserId() != userId) {
             throw new UserNotMatchingException();
         }
-        BeanUtils.copyProperties(req, lesson);
-        lesson.setPassword(encryption.SHA256(lesson.getPassword()));
+        BeanUtils.copyProperties(req, lessonOpt);
+        lessonOpt.get().setPassword(encryption.SHA256(lessonOpt.get().getPassword()));
 
         if (imageFile != null) {
             String uploadFileName = imageFile.getOriginalFilename();
@@ -211,16 +222,19 @@ public class LessonServiceImpl implements LessonService {
             String fullPath = imageFileDir + storeFileName;
             imageFile.transferTo(new File(fullPath));
 
-            lesson.setImage(storeFileName);
+            lessonOpt.get().setImage(storeFileName);
         }
 
-        return lessonRepository.save(lesson);
+        return lessonRepository.save(lessonOpt.get());
     }
 
     @Override
-    public void deleteLesson(int userId, int lessonId) throws UserNotMatchingException {
-        Lesson lesson = lessonRepository.findById(lessonId).get();
-        if (lesson.getUserId() != userId) {
+    public void deleteLesson(int userId, int lessonId) throws UserNotMatchingException, LessonNotFoundException {
+        Optional<Lesson> lessonOpt = lessonRepository.findById(lessonId);
+        if (lessonOpt.isEmpty()) {
+            throw new LessonNotFoundException();
+        }
+        if (lessonOpt.get().getUserId() != userId) {
             throw new UserNotMatchingException();
         }
         lessonRepository.deleteById(lessonId);
@@ -228,28 +242,36 @@ public class LessonServiceImpl implements LessonService {
 
     @Override
     @Transactional
-    public void likeLesson(int userId, int lessonId) {
-        UserLessonLike userLessonLike = userLessonLikeRepository.findByUserIdAndLessonId(userId, lessonId);
-        if (userLessonLike == null) {
-            userLessonLike = new UserLessonLike(userId, lessonId);
-            userLessonLikeRepository.save(userLessonLike);
+    public void likeLesson(int userId, int lessonId) throws LessonNotFoundException {
+        Optional<UserLessonLike> userLessonLikeOpt = userLessonLikeRepository.findByUserIdAndLessonId(userId, lessonId);
+        if (userLessonLikeOpt.isEmpty()) {
+            Optional<Lesson> lesson = lessonRepository.findById(lessonId);
+            if (lesson.isEmpty()) {
+                throw new LessonNotFoundException();
+            }
 
-            Lesson lesson = lessonRepository.findById(lessonId).get();
-            lesson.setLikeCount(lesson.getLikeCount() + 1);
-            lessonRepository.save(lesson);
+            userLessonLikeOpt = Optional.of(new UserLessonLike(userId, lessonId));
+            userLessonLikeRepository.save(userLessonLikeOpt.get());
+
+            lesson.get().setLikeCount(lesson.get().getLikeCount() + 1);
+            lessonRepository.save(lesson.get());
         }
     }
 
     @Override
     @Transactional
-    public void cancelLikeLesson(int userId, int lessonId) {
-        UserLessonLike userLessonLike = userLessonLikeRepository.findByUserIdAndLessonId(userId, lessonId);
-        if (userLessonLike != null) {
+    public void cancelLikeLesson(int userId, int lessonId) throws LessonNotFoundException {
+        Optional<UserLessonLike> userLessonLikeOpt = userLessonLikeRepository.findByUserIdAndLessonId(userId, lessonId);
+        if (userLessonLikeOpt.isPresent()) {
+            Optional<Lesson> lessonOpt = lessonRepository.findById(lessonId);
+            if (lessonOpt.isEmpty()) {
+                throw new LessonNotFoundException();
+            }
+
             userLessonLikeRepository.deleteByUserIdAndLessonId(userId, lessonId);
 
-            Lesson lesson = lessonRepository.findById(lessonId).get();
-            lesson.setLikeCount(lesson.getLikeCount() - 1);
-            lessonRepository.save(lesson);
+            lessonOpt.get().setLikeCount(lessonOpt.get().getLikeCount() - 1);
+            lessonRepository.save(lessonOpt.get());
         }
     }
 

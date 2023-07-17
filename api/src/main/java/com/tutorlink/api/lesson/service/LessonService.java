@@ -6,6 +6,8 @@ import com.tutorlink.api.lesson.dto.response.GetLessonListLoginRes;
 import com.tutorlink.api.lesson.dto.response.GetLessonListRes;
 import com.tutorlink.api.lesson.dto.response.SearchLessonLoginRes;
 import com.tutorlink.api.lesson.dto.response.SearchLessonRes;
+import com.tutorlink.api.lesson.exception.ImageNotFoundException;
+import com.tutorlink.api.lesson.exception.LessonNotFoundException;
 import com.tutorlink.api.lesson.exception.NotTeacherException;
 import com.tutorlink.api.lesson.exception.UserNotMatchingException;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,17 +25,17 @@ public interface LessonService {
 
     List<GetLessonListRes> getLessonList(GetLessonListReq req);
 
-    HashMap<String, Object> downloadImageFile(int lessonId) throws MalformedURLException;
+    HashMap<String, Object> downloadImageFile(int lessonId) throws MalformedURLException, ImageNotFoundException, LessonNotFoundException;
 
     List<SearchLessonLoginRes> searchLessonLogin(int userId, SearchLessonLoginReq req);
 
     List<SearchLessonRes> searchLesson(SearchLessonReq req);
 
-    Lesson updateLesson(int userId, int lessonId, UpdateLessonReq req, MultipartFile imageFile) throws UserNotMatchingException, IOException, NoSuchAlgorithmException;
+    Lesson updateLesson(int userId, int lessonId, UpdateLessonReq req, MultipartFile imageFile) throws UserNotMatchingException, IOException, NoSuchAlgorithmException, LessonNotFoundException;
 
-    void deleteLesson(int userId, int lessonId) throws UserNotMatchingException;
+    void deleteLesson(int userId, int lessonId) throws UserNotMatchingException, LessonNotFoundException;
 
-    void likeLesson(int userId, int lessonId);
+    void likeLesson(int userId, int lessonId) throws LessonNotFoundException;
 
-    void cancelLikeLesson(int userId, int lessonId);
+    void cancelLikeLesson(int userId, int lessonId) throws LessonNotFoundException;
 }

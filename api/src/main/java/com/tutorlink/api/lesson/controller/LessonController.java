@@ -6,6 +6,8 @@ import com.tutorlink.api.lesson.dto.response.GetLessonListLoginRes;
 import com.tutorlink.api.lesson.dto.response.GetLessonListRes;
 import com.tutorlink.api.lesson.dto.response.SearchLessonLoginRes;
 import com.tutorlink.api.lesson.dto.response.SearchLessonRes;
+import com.tutorlink.api.lesson.exception.ImageNotFoundException;
+import com.tutorlink.api.lesson.exception.LessonNotFoundException;
 import com.tutorlink.api.lesson.exception.NotTeacherException;
 import com.tutorlink.api.lesson.exception.UserNotMatchingException;
 import com.tutorlink.api.lesson.service.LessonService;
@@ -67,7 +69,7 @@ public class LessonController {
     }
 
     @GetMapping("/{lessonId}/image-file")
-    public ResponseEntity<Object> downloadImageFile(@PathVariable @Min(1) int lessonId) throws MalformedURLException {
+    public ResponseEntity<Object> downloadImageFile(@PathVariable @Min(1) int lessonId) throws MalformedURLException, ImageNotFoundException, LessonNotFoundException {
 
         HashMap<String, Object> hashMap = lessonService.downloadImageFile(lessonId);
 
@@ -103,7 +105,7 @@ public class LessonController {
     public ResponseEntity<Object> updateLesson(HttpServletRequest servletRequest,
                                                @PathVariable @Min(1) int lessonId,
                                                @RequestPart @Valid UpdateLessonReq req,
-                                               @RequestPart @Nullable MultipartFile imageFile) throws UserNotMatchingException, IOException, NoSuchAlgorithmException {
+                                               @RequestPart @Nullable MultipartFile imageFile) throws UserNotMatchingException, IOException, NoSuchAlgorithmException, LessonNotFoundException {
 
         int userId = (int) servletRequest.getAttribute("userId");
         lessonService.updateLesson(userId, lessonId, req, imageFile);
@@ -114,7 +116,7 @@ public class LessonController {
     @DeleteMapping("/{lessonId}")
     @LoginRequired
     public ResponseEntity<Object> deleteLesson(HttpServletRequest servletRequest,
-                                               @PathVariable @Min(1) int lessonId) throws UserNotMatchingException {
+                                               @PathVariable @Min(1) int lessonId) throws UserNotMatchingException, LessonNotFoundException {
 
         int userId = (int) servletRequest.getAttribute("userId");
         lessonService.deleteLesson(userId, lessonId);
@@ -125,7 +127,7 @@ public class LessonController {
     @PostMapping("/{lessonId}/like")
     @LoginRequired
     public ResponseEntity<Object> likeLesson(HttpServletRequest servletRequest,
-                                             @PathVariable @Min(1) int lessonId) {
+                                             @PathVariable @Min(1) int lessonId) throws LessonNotFoundException {
 
         int userId = (int) servletRequest.getAttribute("userId");
         lessonService.likeLesson(userId, lessonId);
@@ -136,7 +138,7 @@ public class LessonController {
     @PostMapping("/{lessonId}/cancel-like")
     @LoginRequired
     public ResponseEntity<Object> cancelLikeLesson(HttpServletRequest servletRequest,
-                                                   @PathVariable @Min(1) int lessonId) {
+                                                   @PathVariable @Min(1) int lessonId) throws LessonNotFoundException {
 
         int userId = (int) servletRequest.getAttribute("userId");
         lessonService.cancelLikeLesson(userId, lessonId);

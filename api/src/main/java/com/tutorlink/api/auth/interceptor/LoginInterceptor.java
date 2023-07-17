@@ -16,6 +16,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Objects;
+import java.util.Optional;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -41,48 +42,64 @@ public class LoginInterceptor implements HandlerInterceptor {
             try {
                 jwtTokenProvider.validateToken(accessToken);
                 int userId = jwtTokenProvider.getUserId(accessToken);
-                request.setAttribute("userId", userId);
-                return true;
+                Optional<User> userOpt = userRepository.findById(userId);
+                if (userOpt.isEmpty()) {
+                    errorResponse = new ErrorResponse("400", "사용자가 존재하지 않습니다");
+                    response.setStatus(400);
+                } else {
+                    request.setAttribute("userId", userId);
+                    return true;
+                }
             } catch (ExpiredJwtException e) {
                 errorResponse = new ErrorResponse("401", "만료된 액세스 토큰");
+                response.setStatus(401);
             } catch (Exception e) {
                 errorResponse = new ErrorResponse("401", "유효하지 않은 액세스 토큰");
+                response.setStatus(401);
             }
         } else if (refreshToken != null) {
             try {
                 jwtTokenProvider.validateToken(refreshToken);
                 int userId = jwtTokenProvider.getUserId(refreshToken);
-                User user = userRepository.findById(userId).get();
-                if (refreshToken.equals(user.getRefreshToken())) {
-                    String newAccessToken = jwtTokenProvider.createAccessToken(userId);
-                    String newRefreshToken = jwtTokenProvider.createRefreshToken(userId);
-
-                    user.setRefreshToken(newRefreshToken);
-                    userRepository.save(user);
-
-                    LoginRes res = new LoginRes(newAccessToken, newRefreshToken);
-
-                    response.setCharacterEncoding("UTF-8");
-                    response.setContentType("application/json");
-
-                    ObjectMapper objectMapper = new ObjectMapper();
-                    response.getWriter().write(objectMapper.writeValueAsString(res));
-
-                    return false;
+                Optional<User> userOpt = userRepository.findById(userId);
+                if (userOpt.isEmpty()) {
+                    errorResponse = new ErrorResponse("400", "사용자가 존재하지 않습니다");
+                    response.setStatus(400);
                 } else {
-                    errorResponse = new ErrorResponse("401", "유효하지 않은 리프레쉬 토큰");
+                    if (refreshToken.equals(userOpt.get().getRefreshToken())) {
+                        String newAccessToken = jwtTokenProvider.createAccessToken(userId);
+                        String newRefreshToken = jwtTokenProvider.createRefreshToken(userId);
+
+                        userOpt.get().setRefreshToken(newRefreshToken);
+                        userRepository.save(userOpt.get());
+
+                        LoginRes res = new LoginRes(newAccessToken, newRefreshToken);
+
+                        response.setCharacterEncoding("UTF-8");
+                        response.setContentType("application/json");
+
+                        ObjectMapper objectMapper = new ObjectMapper();
+                        response.getWriter().write(objectMapper.writeValueAsString(res));
+
+                        return false;
+                    } else {
+                        errorResponse = new ErrorResponse("401", "유효하지 않은 리프레쉬 토큰");
+                        response.setStatus(401);
+                    }
                 }
             } catch (ExpiredJwtException e) {
                 errorResponse = new ErrorResponse("401", "만료된 리프레쉬 토큰");
+                response.setStatus(401);
             } catch (Exception e) {
                 errorResponse = new ErrorResponse("401", "유효하지 않은 리프레쉬 토큰");
+                response.setStatus(401);
             }
         } else {
             errorResponse = new ErrorResponse("401", "토큰이 존재하지 않습니다");
+            response.setStatus(401);
         }
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json");
-        response.setStatus(401);
 
         ObjectMapper objectMapper = new ObjectMapper();
         response.getWriter().write(objectMapper.writeValueAsString(errorResponse));
