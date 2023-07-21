@@ -47,7 +47,7 @@ public class LoginInterceptor implements HandlerInterceptor {
                     errorResponse = new ErrorResponse("400", "사용자가 존재하지 않습니다");
                     response.setStatus(400);
                 } else {
-                    request.setAttribute("userId", userId);
+                    request.setAttribute("user", userOpt.get());
                     return true;
                 }
             } catch (ExpiredJwtException e) {

@@ -1,7 +1,8 @@
 package com.tutorlink.api.lesson.service;
 
 import com.tutorlink.api.lesson.domain.Lesson;
-import com.tutorlink.api.lesson.dto.request.*;
+import com.tutorlink.api.lesson.dto.request.AddLessonReq;
+import com.tutorlink.api.lesson.dto.request.UpdateLessonReq;
 import com.tutorlink.api.lesson.dto.response.GetLessonListLoginRes;
 import com.tutorlink.api.lesson.dto.response.GetLessonListRes;
 import com.tutorlink.api.lesson.dto.response.SearchLessonLoginRes;
@@ -10,6 +11,8 @@ import com.tutorlink.api.lesson.exception.ImageNotFoundException;
 import com.tutorlink.api.lesson.exception.LessonNotFoundException;
 import com.tutorlink.api.lesson.exception.NotTeacherException;
 import com.tutorlink.api.lesson.exception.UserNotMatchingException;
+import com.tutorlink.api.user.domain.User;
+import com.tutorlink.api.user.exception.UserNotFoundException;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -19,23 +22,23 @@ import java.util.HashMap;
 import java.util.List;
 
 public interface LessonService {
-    Lesson addLesson(int userId, AddLessonReq req, MultipartFile imageFile) throws IOException, NoSuchAlgorithmException, NotTeacherException;
+    Lesson addLesson(User user, AddLessonReq req, MultipartFile imageFile) throws IOException, NoSuchAlgorithmException, NotTeacherException;
 
-    List<GetLessonListLoginRes> getLessonListLogin(int userId, GetLessonListLoginReq req);
+    List<GetLessonListLoginRes> getLessonListLogin(User user, int page);
 
-    List<GetLessonListRes> getLessonList(GetLessonListReq req);
+    List<GetLessonListRes> getLessonList(int page);
 
     HashMap<String, Object> downloadImageFile(int lessonId) throws MalformedURLException, ImageNotFoundException, LessonNotFoundException;
 
-    List<SearchLessonLoginRes> searchLessonLogin(int userId, SearchLessonLoginReq req);
+    List<SearchLessonLoginRes> searchLessonLogin(User user, int type, String keyword, int page) throws UserNotFoundException;
 
-    List<SearchLessonRes> searchLesson(SearchLessonReq req);
+    List<SearchLessonRes> searchLesson(int type, String keyword, int page) throws UserNotFoundException;
 
-    Lesson updateLesson(int userId, int lessonId, UpdateLessonReq req, MultipartFile imageFile) throws UserNotMatchingException, IOException, NoSuchAlgorithmException, LessonNotFoundException;
+    Lesson updateLesson(User user, int lessonId, UpdateLessonReq req, MultipartFile imageFile) throws UserNotMatchingException, IOException, NoSuchAlgorithmException, LessonNotFoundException;
 
-    void deleteLesson(int userId, int lessonId) throws UserNotMatchingException, LessonNotFoundException;
+    void deleteLesson(User user, int lessonId) throws UserNotMatchingException, LessonNotFoundException;
 
-    void likeLesson(int userId, int lessonId) throws LessonNotFoundException;
+    void likeLesson(User user, int lessonId) throws LessonNotFoundException;
 
-    void cancelLikeLesson(int userId, int lessonId) throws LessonNotFoundException;
+    void cancelLikeLesson(User user, int lessonId) throws LessonNotFoundException;
 }

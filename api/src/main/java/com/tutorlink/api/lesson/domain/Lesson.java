@@ -1,6 +1,7 @@
 package com.tutorlink.api.lesson.domain;
 
 import com.tutorlink.api.lesson.enumeration.RoomType;
+import com.tutorlink.api.user.domain.User;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 
@@ -45,10 +46,7 @@ public class Lesson {
     Date createTime;
 
     @NonNull
-    @Column(name = "user_id", nullable = false)
-    int userId;
-
-    @NonNull
-    @Column(name = "user_name", nullable = false)
-    String userName;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    User user;
 }

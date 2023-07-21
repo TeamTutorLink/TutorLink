@@ -1,5 +1,6 @@
 package com.tutorlink.api.lesson.domain;
 
+import com.tutorlink.api.user.domain.User;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 
@@ -21,10 +22,12 @@ public class UserLessonLike {
     int userLessonLikeId;
 
     @NonNull
-    @Column(name = "user_id", nullable = false)
-    int userId;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    User user;
 
     @NonNull
-    @Column(name = "lesson_id", nullable = false)
-    int lessonId;
+    @ManyToOne
+    @JoinColumn(name = "lesson_id")
+    Lesson lesson;
 }

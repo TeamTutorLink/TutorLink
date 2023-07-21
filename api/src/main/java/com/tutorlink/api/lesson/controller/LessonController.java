@@ -1,7 +1,8 @@
 package com.tutorlink.api.lesson.controller;
 
 import com.tutorlink.api.auth.annotation.LoginRequired;
-import com.tutorlink.api.lesson.dto.request.*;
+import com.tutorlink.api.lesson.dto.request.AddLessonReq;
+import com.tutorlink.api.lesson.dto.request.UpdateLessonReq;
 import com.tutorlink.api.lesson.dto.response.GetLessonListLoginRes;
 import com.tutorlink.api.lesson.dto.response.GetLessonListRes;
 import com.tutorlink.api.lesson.dto.response.SearchLessonLoginRes;
@@ -11,6 +12,8 @@ import com.tutorlink.api.lesson.exception.LessonNotFoundException;
 import com.tutorlink.api.lesson.exception.NotTeacherException;
 import com.tutorlink.api.lesson.exception.UserNotMatchingException;
 import com.tutorlink.api.lesson.service.LessonService;
+import com.tutorlink.api.user.domain.User;
+import com.tutorlink.api.user.exception.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
@@ -43,8 +46,8 @@ public class LessonController {
                                             @RequestPart @Valid AddLessonReq req,
                                             @RequestPart @Nullable MultipartFile imageFile) throws IOException, NoSuchAlgorithmException, NotTeacherException {
 
-        int userId = (int) servletRequest.getAttribute("userId");
-        lessonService.addLesson(userId, req, imageFile);
+        User user = (User) servletRequest.getAttribute("user");
+        lessonService.addLesson(user, req, imageFile);
 
         return ResponseEntity.ok().build();
     }
@@ -52,18 +55,18 @@ public class LessonController {
     @GetMapping("/login")
     @LoginRequired
     public ResponseEntity<Object> getLessonListLogin(HttpServletRequest servletRequest,
-                                                     @RequestBody @Valid GetLessonListLoginReq req) {
+                                                     @RequestParam int page) {
 
-        int userId = (int) servletRequest.getAttribute("userId");
-        List<GetLessonListLoginRes> resList = lessonService.getLessonListLogin(userId, req);
+        User user = (User) servletRequest.getAttribute("user");
+        List<GetLessonListLoginRes> resList = lessonService.getLessonListLogin(user, page);
 
         return ResponseEntity.ok(resList);
     }
 
     @GetMapping
-    public ResponseEntity<Object> getLessonList(@RequestBody @Valid GetLessonListReq req) {
+    public ResponseEntity<Object> getLessonList(@RequestParam int page) {
 
-        List<GetLessonListRes> resList = lessonService.getLessonList(req);
+        List<GetLessonListRes> resList = lessonService.getLessonList(page);
 
         return ResponseEntity.ok(resList);
     }
@@ -84,18 +87,22 @@ public class LessonController {
     @GetMapping("/search/login")
     @LoginRequired
     public ResponseEntity<Object> searchLessonLogin(HttpServletRequest servletRequest,
-                                                    @RequestBody @Valid SearchLessonLoginReq req) {
+                                                    @RequestParam int type,
+                                                    @RequestParam String keyword,
+                                                    @RequestParam int page) throws UserNotFoundException {
 
-        int userId = (int) servletRequest.getAttribute("userId");
-        List<SearchLessonLoginRes> resList = lessonService.searchLessonLogin(userId, req);
+        User user = (User) servletRequest.getAttribute("user");
+        List<SearchLessonLoginRes> resList = lessonService.searchLessonLogin(user, type, keyword, page);
 
         return ResponseEntity.ok().body(resList);
     }
 
     @GetMapping("/search")
-    public ResponseEntity<Object> searchLesson(@RequestBody @Valid SearchLessonReq req) {
+    public ResponseEntity<Object> searchLesson(@RequestParam int type,
+                                               @RequestParam String keyword,
+                                               @RequestParam int page) throws UserNotFoundException {
 
-        List<SearchLessonRes> resList = lessonService.searchLesson(req);
+        List<SearchLessonRes> resList = lessonService.searchLesson(type, keyword, page);
 
         return ResponseEntity.ok().body(resList);
     }
@@ -107,8 +114,8 @@ public class LessonController {
                                                @RequestPart @Valid UpdateLessonReq req,
                                                @RequestPart @Nullable MultipartFile imageFile) throws UserNotMatchingException, IOException, NoSuchAlgorithmException, LessonNotFoundException {
 
-        int userId = (int) servletRequest.getAttribute("userId");
-        lessonService.updateLesson(userId, lessonId, req, imageFile);
+        User user = (User) servletRequest.getAttribute("user");
+        lessonService.updateLesson(user, lessonId, req, imageFile);
 
         return ResponseEntity.ok().build();
     }
@@ -118,8 +125,8 @@ public class LessonController {
     public ResponseEntity<Object> deleteLesson(HttpServletRequest servletRequest,
                                                @PathVariable @Min(1) int lessonId) throws UserNotMatchingException, LessonNotFoundException {
 
-        int userId = (int) servletRequest.getAttribute("userId");
-        lessonService.deleteLesson(userId, lessonId);
+        User user = (User) servletRequest.getAttribute("user");
+        lessonService.deleteLesson(user, lessonId);
 
         return ResponseEntity.ok().build();
     }
@@ -129,8 +136,8 @@ public class LessonController {
     public ResponseEntity<Object> likeLesson(HttpServletRequest servletRequest,
                                              @PathVariable @Min(1) int lessonId) throws LessonNotFoundException {
 
-        int userId = (int) servletRequest.getAttribute("userId");
-        lessonService.likeLesson(userId, lessonId);
+        User user = (User) servletRequest.getAttribute("user");
+        lessonService.likeLesson(user, lessonId);
 
         return ResponseEntity.ok().build();
     }
@@ -140,8 +147,8 @@ public class LessonController {
     public ResponseEntity<Object> cancelLikeLesson(HttpServletRequest servletRequest,
                                                    @PathVariable @Min(1) int lessonId) throws LessonNotFoundException {
 
-        int userId = (int) servletRequest.getAttribute("userId");
-        lessonService.cancelLikeLesson(userId, lessonId);
+        User user = (User) servletRequest.getAttribute("user");
+        lessonService.cancelLikeLesson(user, lessonId);
 
         return ResponseEntity.ok().build();
     }
