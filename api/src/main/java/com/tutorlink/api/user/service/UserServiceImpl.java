@@ -29,4 +29,10 @@ public class UserServiceImpl implements UserService {
     public User getUserByKakaoSocialId(String kakaoSocialId) {
         return userRepository.findBySocialLoginTypeAndSocialId(SocialLoginType.KAKAO, kakaoSocialId);
     }
+
+    @Override
+    public void changeToTeacher(User user) {
+        user.setUserType(UserType.TEACHER);
+        userRepository.save(user);
+    }
 }
