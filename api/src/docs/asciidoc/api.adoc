@@ -9,7 +9,7 @@ endif::[]
 :toc-title: Table of Contents
 :source-highlighter: prettify
 
-== User
+== Auth
 === 카카오 로그인
 DESCRIPTION
 ```
@@ -160,3 +160,16 @@ include::{snippets}/cancelLikeLesson/http-request.adoc[]
 RESPONSE
 
 include::{snippets}/cancelLikeLesson/http-response.adoc[]
+
+== User
+=== 선생님 계정으로 전환
+DESCRIPTION
+```
+```
+REQUEST
+
+include::{snippets}/changeToTeacher/http-request.adoc[]
+
+RESPONSE
+
+include::{snippets}/changeToTeacher/http-response.adoc[]
