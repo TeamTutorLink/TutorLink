@@ -27,6 +27,12 @@ public class LoginInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        if (request.getMethod().equals("OPTIONS")) {
+            return true;
+        }
+        if (!(handler instanceof HandlerMethod)) {
+            return false;
+        }
         HandlerMethod handlerMethod = (HandlerMethod) handler;
         LoginRequired loginRequired = handlerMethod.getMethodAnnotation(LoginRequired.class);
         if (Objects.isNull(loginRequired)) {
