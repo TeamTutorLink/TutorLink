@@ -48,8 +48,8 @@ public class LessonServiceImpl implements LessonService {
     private final ImageFileRepository imageFileRepository;
     private final Encryption encryption;
 
-    @Value("${image.file.dir}")
-    private String imageFileDir;
+    @Value("${lesson.image.file.dir}")
+    private String lessonImageFileDir;
 
     @Override
     @Transactional
@@ -72,7 +72,7 @@ public class LessonServiceImpl implements LessonService {
 
             imageFileRepository.save(new ImageFile(storeFileName, uploadFileName, ext, new Date()));
 
-            String fullPath = imageFileDir + storeFileName;
+            String fullPath = lessonImageFileDir + storeFileName;
             imageFile.transferTo(new File(fullPath));
 
             lesson.setImage(storeFileName);
@@ -110,7 +110,6 @@ public class LessonServiceImpl implements LessonService {
 
     @Override
     public List<GetLessonListRes> getLessonList(int page) {
-        System.out.println("LessonServiceImpl.getLessonList");
         PageRequest pageRequest = PageRequest.of(page - 1, 8, Sort.Direction.DESC, "lessonId");
         Page<Lesson> lessonPage = lessonRepository.findAll(pageRequest);
 
@@ -136,7 +135,7 @@ public class LessonServiceImpl implements LessonService {
         }
 
         HashMap<String, Object> res = new HashMap<>();
-        res.put("urlResource", new UrlResource("file:" + imageFileDir + lesson.get().getImage()));
+        res.put("urlResource", new UrlResource("file:" + lessonImageFileDir + lesson.get().getImage()));
         res.put("ext", extractExt(lesson.get().getImage()));
 
         return res;
@@ -228,7 +227,7 @@ public class LessonServiceImpl implements LessonService {
 
             imageFileRepository.save(new ImageFile(storeFileName, uploadFileName, ext, new Date()));
 
-            String fullPath = imageFileDir + storeFileName;
+            String fullPath = lessonImageFileDir + storeFileName;
             imageFile.transferTo(new File(fullPath));
 
             lessonOpt.get().setImage(storeFileName);
