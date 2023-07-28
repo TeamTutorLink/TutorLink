@@ -6,7 +6,9 @@ import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Getter
@@ -49,4 +51,7 @@ public class Lesson {
     @ManyToOne
     @JoinColumn(name = "user_id")
     User user;
+
+    @OneToMany(mappedBy = "lesson", cascade = CascadeType.REMOVE)
+    List<UserLessonLike> userLessonLikes = new ArrayList<>();
 }
