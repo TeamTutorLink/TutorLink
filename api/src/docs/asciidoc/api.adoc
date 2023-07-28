@@ -173,3 +173,39 @@ include::{snippets}/changeToTeacher/http-request.adoc[]
 RESPONSE
 
 include::{snippets}/changeToTeacher/http-response.adoc[]
+
+=== 유저 정보 변경
+DESCRIPTION
+```
+```
+REQUEST
+
+include::{snippets}/updateUser/http-request.adoc[]
+
+RESPONSE
+
+include::{snippets}/updateUser/http-response.adoc[]
+
+=== 로그아웃
+DESCRIPTION
+```
+```
+REQUEST
+
+include::{snippets}/logout/http-request.adoc[]
+
+RESPONSE
+
+include::{snippets}/logout/http-response.adoc[]
+
+=== 회원 탈퇴
+DESCRIPTION
+```
+```
+REQUEST
+
+include::{snippets}/deleteUser/http-request.adoc[]
+
+RESPONSE
+
+include::{snippets}/deleteUser/http-response.adoc[]
