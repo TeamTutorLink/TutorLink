@@ -11,6 +11,10 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
+@Table(indexes = {
+        @Index(columnList = "title"),
+        @Index(columnList = "user_id")
+})
 @Getter
 @Setter
 @ToString

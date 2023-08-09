@@ -7,7 +7,7 @@ import org.hibernate.annotations.DynamicInsert;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "user_lesson_like")
+@Table(name = "user_lesson_like", indexes = @Index(columnList = "user_id, lesson_id"))
 @Getter
 @Setter
 @ToString

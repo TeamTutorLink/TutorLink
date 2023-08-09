@@ -13,6 +13,10 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
+@Table(indexes = {
+        @Index(columnList = "social_id, social_login_type"),
+        @Index(columnList = "user_name")
+})
 @Getter
 @Setter
 @ToString
