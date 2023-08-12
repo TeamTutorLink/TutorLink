@@ -42,4 +42,8 @@ public interface LessonService {
     void likeLesson(User user, int lessonId) throws LessonNotFoundException;
 
     void cancelLikeLesson(User user, int lessonId) throws LessonNotFoundException;
+
+    List<GetMyLessonListRes> getMyLessonList(User user, int page);
+
+    List<GetLikeLessonListRes> getLikeLessonList(User user, int page);
 }

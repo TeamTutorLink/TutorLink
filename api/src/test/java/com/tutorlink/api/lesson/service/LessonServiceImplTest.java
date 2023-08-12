@@ -87,10 +87,10 @@ class LessonServiceImplTest {
 
     @Test
     void getPopularLessonListLogin() {
-        Lesson lesson1 = new Lesson("제목", RoomType.PRIVATE, 123, user);
-        Lesson lesson2 = new Lesson("제목", RoomType.PRIVATE, 763, user);
-        Lesson lesson3 = new Lesson("제목", RoomType.PRIVATE, 12, user);
-        Lesson lesson4 = new Lesson("제목", RoomType.PRIVATE, 86, user);
+        Lesson lesson1 = new Lesson("제목", RoomType.PUBLIC, 123, user);
+        Lesson lesson2 = new Lesson("제목", RoomType.PUBLIC, 763, user);
+        Lesson lesson3 = new Lesson("제목", RoomType.PUBLIC, 12, user);
+        Lesson lesson4 = new Lesson("제목", RoomType.PUBLIC, 86, user);
 
         lessonRepository.save(lesson1);
         lessonRepository.save(lesson2);
@@ -106,10 +106,10 @@ class LessonServiceImplTest {
 
     @Test
     void getPopularLessonList() {
-        Lesson lesson1 = new Lesson("제목", RoomType.PRIVATE, 123, user);
-        Lesson lesson2 = new Lesson("제목", RoomType.PRIVATE, 763, user);
-        Lesson lesson3 = new Lesson("제목", RoomType.PRIVATE, 12, user);
-        Lesson lesson4 = new Lesson("제목", RoomType.PRIVATE, 86, user);
+        Lesson lesson1 = new Lesson("제목", RoomType.PUBLIC, 123, user);
+        Lesson lesson2 = new Lesson("제목", RoomType.PUBLIC, 763, user);
+        Lesson lesson3 = new Lesson("제목", RoomType.PUBLIC, 12, user);
+        Lesson lesson4 = new Lesson("제목", RoomType.PUBLIC, 86, user);
 
         lessonRepository.save(lesson1);
         lessonRepository.save(lesson2);

@@ -91,6 +91,30 @@ RESPONSE
 
 include::{snippets}/getPopularLessonList/http-response.adoc[]
 
+=== 내 강의 리스트
+DESCRIPTION
+```
+```
+REQUEST
+
+include::{snippets}/getMyLessonList/http-request.adoc[]
+
+RESPONSE
+
+include::{snippets}/getMyLessonList/http-response.adoc[]
+
+=== 좋아요 강의 리스트
+DESCRIPTION
+```
+```
+REQUEST
+
+include::{snippets}/getLikeLessonList/http-request.adoc[]
+
+RESPONSE
+
+include::{snippets}/getLikeLessonList/http-response.adoc[]
+
 === 강의 이미지 다운로드
 DESCRIPTION
 ```

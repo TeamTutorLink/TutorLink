@@ -27,7 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Transactional
 class LessonControllerTest {
 
-    private String JWT_ACCESS_TOKEN = "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEsImlhdCI6MTY5MTU2NDQ3MiwiZXhwIjoxNjkxNTY2MjcyfQ.NRHR7IR1hyS-3rOWVtntiNgnrF_DpkYNmCwCwDUtBCQ";
+    private String JWT_ACCESS_TOKEN = "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEsImlhdCI6MTY5MTgxNTE0NSwiZXhwIjoxNjkxODE2OTQ1fQ.lg5gyfOhbBFrb7x6bD6C8ny-LmfSugUF2IDMqx8H6WQ";
 
     @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     @Autowired
@@ -90,6 +90,26 @@ class LessonControllerTest {
         mockMvc.perform(get("/lessons/popular?page={page}", 1))
                 .andExpect(status().isOk())
                 .andDo(document("getPopularLessonList",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint())));
+    }
+
+    @Test
+    void getMyLessonList() throws Exception {
+        mockMvc.perform(get("/lessons/my?page={page}", 1)
+                        .header("accessToken", JWT_ACCESS_TOKEN))
+                .andExpect(status().isOk())
+                .andDo(document("getMyLessonList",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint())));
+    }
+
+    @Test
+    void getLikeLessonList() throws Exception {
+        mockMvc.perform(get("/lessons/like?page={page}", 1)
+                        .header("accessToken", JWT_ACCESS_TOKEN))
+                .andExpect(status().isOk())
+                .andDo(document("getLikeLessonList",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint())));
     }

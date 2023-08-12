@@ -71,7 +71,7 @@ public class LessonController {
     @GetMapping("/popular/login")
     @LoginRequired
     public ResponseEntity<Object> getPopularLessonListLogin(HttpServletRequest servletRequest,
-                                                     @RequestParam int page) {
+                                                            @RequestParam int page) {
 
         User user = (User) servletRequest.getAttribute("user");
         List<GetPopularLessonListLoginRes> resList = lessonService.getPopularLessonListLogin(user, page);
@@ -83,6 +83,28 @@ public class LessonController {
     public ResponseEntity<Object> getPopularLessonList(@RequestParam int page) {
 
         List<GetPopularLessonListRes> resList = lessonService.getPopularLessonList(page);
+
+        return ResponseEntity.ok(resList);
+    }
+
+    @GetMapping("/my")
+    @LoginRequired
+    public ResponseEntity<Object> getMyLessonList(HttpServletRequest servletRequest,
+                                                  @RequestParam int page) {
+
+        User user = (User) servletRequest.getAttribute("user");
+        List<GetMyLessonListRes> resList = lessonService.getMyLessonList(user, page);
+
+        return ResponseEntity.ok(resList);
+    }
+
+    @GetMapping("/like")
+    @LoginRequired
+    public ResponseEntity<Object> getLikeLessonList(HttpServletRequest servletRequest,
+                                                    @RequestParam int page) {
+
+        User user = (User) servletRequest.getAttribute("user");
+        List<GetLikeLessonListRes> resList = lessonService.getLikeLessonList(user, page);
 
         return ResponseEntity.ok(resList);
     }

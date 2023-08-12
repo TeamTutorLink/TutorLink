@@ -165,6 +165,48 @@ public class LessonServiceImpl implements LessonService {
     }
 
     @Override
+    public List<GetMyLessonListRes> getMyLessonList(User user, int page) {
+        Optional<User> userOpt = userRepository.findById(user.getUserId());
+        List<Lesson> lessonList = userOpt.get().getLessons();
+
+        List<GetMyLessonListRes> resList = new ArrayList<>();
+        int idx = 8 * (page - 1);
+        for (int i = idx; i < Math.min(idx + 8, lessonList.size()); i++) {
+            Lesson lesson = lessonList.get(i);
+            GetMyLessonListRes res = new GetMyLessonListRes();
+            BeanUtils.copyProperties(lesson, res);
+            res.setUserName(user.getUserName());
+            resList.add(res);
+        }
+
+        return resList;
+    }
+
+    @Override
+    public List<GetLikeLessonListRes> getLikeLessonList(User user, int page) {
+        Optional<User> userOpt = userRepository.findById(user.getUserId());
+        List<UserLessonLike> userLessonLikeList = userOpt.get().getUserLessonLikes();
+
+        List<Integer> lessonIdList = new ArrayList<>();
+        int idx = 8 * (page - 1);
+        for (int i = idx; i < Math.min(idx + 8, userLessonLikeList.size()); i++) {
+            lessonIdList.add(userLessonLikeList.get(i).getLesson().getLessonId());
+        }
+        List<Lesson> lessonList = lessonRepository.findByLessonIdIn(lessonIdList);
+
+        List<GetLikeLessonListRes> resList = new ArrayList<>();
+        for (Lesson lesson : lessonList) {
+            GetLikeLessonListRes res = new GetLikeLessonListRes();
+            BeanUtils.copyProperties(lesson, res);
+            res.setUserName(lesson.getUser().getUserName());
+            res.setLikeLesson(true);
+            resList.add(res);
+        }
+
+        return resList;
+    }
+
+    @Override
     public HashMap<String, Object> downloadImageFile(int lessonId) throws MalformedURLException, ImageNotFoundException, LessonNotFoundException {
         Optional<Lesson> lesson = lessonRepository.findById(lessonId);
         if (lesson.isEmpty()) {

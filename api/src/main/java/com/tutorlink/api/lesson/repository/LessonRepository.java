@@ -7,10 +7,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface LessonRepository extends JpaRepository<Lesson, Integer> {
 
     Page<Lesson> findByTitleContaining(String keyword, Pageable pageable);
 
     Page<Lesson> findByUser(User user, Pageable pageable);
+
+    List<Lesson> findByLessonIdIn(List<Integer> lessonIdList);
 }
