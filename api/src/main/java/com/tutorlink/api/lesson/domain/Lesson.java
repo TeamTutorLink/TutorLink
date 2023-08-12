@@ -13,7 +13,8 @@ import java.util.List;
 @Entity
 @Table(indexes = {
         @Index(columnList = "title"),
-        @Index(columnList = "user_id")
+        @Index(columnList = "user_id"),
+        @Index(columnList = "like_count")
 })
 @Getter
 @Setter

@@ -3,10 +3,7 @@ package com.tutorlink.api.lesson.service;
 import com.tutorlink.api.lesson.domain.Lesson;
 import com.tutorlink.api.lesson.dto.request.AddLessonReq;
 import com.tutorlink.api.lesson.dto.request.UpdateLessonReq;
-import com.tutorlink.api.lesson.dto.response.GetLessonListLoginRes;
-import com.tutorlink.api.lesson.dto.response.GetLessonListRes;
-import com.tutorlink.api.lesson.dto.response.SearchLessonLoginRes;
-import com.tutorlink.api.lesson.dto.response.SearchLessonRes;
+import com.tutorlink.api.lesson.dto.response.*;
 import com.tutorlink.api.lesson.exception.ImageNotFoundException;
 import com.tutorlink.api.lesson.exception.LessonNotFoundException;
 import com.tutorlink.api.lesson.exception.NotTeacherException;
@@ -27,6 +24,10 @@ public interface LessonService {
     List<GetLessonListLoginRes> getLessonListLogin(User user, int page);
 
     List<GetLessonListRes> getLessonList(int page);
+
+    List<GetPopularLessonListLoginRes> getPopularLessonListLogin(User user, int page);
+
+    List<GetPopularLessonListRes> getPopularLessonList(int page);
 
     HashMap<String, Object> downloadImageFile(int lessonId) throws MalformedURLException, ImageNotFoundException, LessonNotFoundException;
 

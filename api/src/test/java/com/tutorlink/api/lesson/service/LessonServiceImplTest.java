@@ -5,6 +5,8 @@ import com.tutorlink.api.lesson.dto.request.AddLessonReq;
 import com.tutorlink.api.lesson.dto.request.UpdateLessonReq;
 import com.tutorlink.api.lesson.dto.response.GetLessonListLoginRes;
 import com.tutorlink.api.lesson.dto.response.GetLessonListRes;
+import com.tutorlink.api.lesson.dto.response.GetPopularLessonListLoginRes;
+import com.tutorlink.api.lesson.dto.response.GetPopularLessonListRes;
 import com.tutorlink.api.lesson.enumeration.RoomType;
 import com.tutorlink.api.lesson.exception.LessonNotFoundException;
 import com.tutorlink.api.lesson.exception.NotTeacherException;
@@ -81,6 +83,44 @@ class LessonServiceImplTest {
     void getLessonList() {
         List<GetLessonListRes> res = lessonService.getLessonList(1);
         assertThat(res.size()).isEqualTo(1);
+    }
+
+    @Test
+    void getPopularLessonListLogin() {
+        Lesson lesson1 = new Lesson("제목", RoomType.PRIVATE, 123, user);
+        Lesson lesson2 = new Lesson("제목", RoomType.PRIVATE, 763, user);
+        Lesson lesson3 = new Lesson("제목", RoomType.PRIVATE, 12, user);
+        Lesson lesson4 = new Lesson("제목", RoomType.PRIVATE, 86, user);
+
+        lessonRepository.save(lesson1);
+        lessonRepository.save(lesson2);
+        lessonRepository.save(lesson3);
+        lessonRepository.save(lesson4);
+
+        List<GetPopularLessonListLoginRes> res = lessonService.getPopularLessonListLogin(user, 1);
+        assertThat(res.get(0).getLikeCount()).isEqualTo(763);
+        assertThat(res.get(1).getLikeCount()).isEqualTo(123);
+        assertThat(res.get(2).getLikeCount()).isEqualTo(86);
+        assertThat(res.get(3).getLikeCount()).isEqualTo(12);
+    }
+
+    @Test
+    void getPopularLessonList() {
+        Lesson lesson1 = new Lesson("제목", RoomType.PRIVATE, 123, user);
+        Lesson lesson2 = new Lesson("제목", RoomType.PRIVATE, 763, user);
+        Lesson lesson3 = new Lesson("제목", RoomType.PRIVATE, 12, user);
+        Lesson lesson4 = new Lesson("제목", RoomType.PRIVATE, 86, user);
+
+        lessonRepository.save(lesson1);
+        lessonRepository.save(lesson2);
+        lessonRepository.save(lesson3);
+        lessonRepository.save(lesson4);
+
+        List<GetPopularLessonListRes> res = lessonService.getPopularLessonList(1);
+        assertThat(res.get(0).getLikeCount()).isEqualTo(763);
+        assertThat(res.get(1).getLikeCount()).isEqualTo(123);
+        assertThat(res.get(2).getLikeCount()).isEqualTo(86);
+        assertThat(res.get(3).getLikeCount()).isEqualTo(12);
     }
 
     @Test

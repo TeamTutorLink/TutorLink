@@ -37,7 +37,7 @@ RESPONSE
 
 include::{snippets}/addLesson/http-response.adoc[]
 
-=== 로그인 사용자 강의 리스트
+=== 강의 리스트(로그인)
 DESCRIPTION
 ```
 로그인한 사용자의 강의 리스트 요청(요청 사용자가 강의 좋아요 눌렀는지를 포함)
@@ -64,6 +64,33 @@ RESPONSE
 
 include::{snippets}/getLessonList/http-response.adoc[]
 
+=== 인기 강의 리스트(로그인)
+DESCRIPTION
+```
+로그인한 사용자의 인기 강의 리스트 요청(요청 사용자가 강의 좋아요 눌렀는지를 포함)
+헤더에 jwt 토큰을 담아야 함
+```
+REQUEST
+
+include::{snippets}/getPopularLessonListLogin/http-request.adoc[]
+
+RESPONSE
+
+include::{snippets}/getPopularLessonListLogin/http-response.adoc[]
+
+=== 인기 강의 리스트
+DESCRIPTION
+```
+로그인 안 한 사용자의 인기 강의 리스트 요청
+```
+REQUEST
+
+include::{snippets}/getPopularLessonList/http-request.adoc[]
+
+RESPONSE
+
+include::{snippets}/getPopularLessonList/http-response.adoc[]
+
 === 강의 이미지 다운로드
 DESCRIPTION
 ```
@@ -73,7 +100,7 @@ REQUEST
 
 include::{snippets}/downloadImageFile/http-request.adoc[]
 
-=== 로그인 사용자 강의 검색
+=== 강의 검색(로그인)
 DESCRIPTION
 ```
 로그인한 사용자의 강의 검색 요청(요청 사용자가 강의 좋아요 눌렀는지를 포함)

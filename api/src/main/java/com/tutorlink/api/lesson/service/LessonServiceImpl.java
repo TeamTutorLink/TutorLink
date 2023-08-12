@@ -7,10 +7,7 @@ import com.tutorlink.api.lesson.domain.Lesson;
 import com.tutorlink.api.lesson.domain.UserLessonLike;
 import com.tutorlink.api.lesson.dto.request.AddLessonReq;
 import com.tutorlink.api.lesson.dto.request.UpdateLessonReq;
-import com.tutorlink.api.lesson.dto.response.GetLessonListLoginRes;
-import com.tutorlink.api.lesson.dto.response.GetLessonListRes;
-import com.tutorlink.api.lesson.dto.response.SearchLessonLoginRes;
-import com.tutorlink.api.lesson.dto.response.SearchLessonRes;
+import com.tutorlink.api.lesson.dto.response.*;
 import com.tutorlink.api.lesson.exception.ImageNotFoundException;
 import com.tutorlink.api.lesson.exception.LessonNotFoundException;
 import com.tutorlink.api.lesson.exception.NotTeacherException;
@@ -116,6 +113,49 @@ public class LessonServiceImpl implements LessonService {
         List<GetLessonListRes> resList = new ArrayList<>();
         for (Lesson lesson : lessonPage) {
             GetLessonListRes res = new GetLessonListRes();
+            BeanUtils.copyProperties(lesson, res);
+            res.setUserName(lesson.getUser().getUserName());
+            resList.add(res);
+        }
+
+        return resList;
+    }
+
+    @Override
+    public List<GetPopularLessonListLoginRes> getPopularLessonListLogin(User user, int page) {
+        PageRequest pageRequest = PageRequest.of(page - 1, 8, Sort.Direction.DESC, "likeCount");
+        Page<Lesson> lessonPage = lessonRepository.findAll(pageRequest);
+
+        List<GetPopularLessonListLoginRes> resList = new ArrayList<>();
+        List<Lesson> lessonList = new ArrayList<>();
+        for (Lesson lesson : lessonPage) {
+            GetPopularLessonListLoginRes res = new GetPopularLessonListLoginRes();
+            BeanUtils.copyProperties(lesson, res);
+            res.setUserName(lesson.getUser().getUserName());
+            resList.add(res);
+            lessonList.add(lesson);
+        }
+        List<UserLessonLike> userLessonLikeList = userLessonLikeRepository.findAllByUserAndLessonIn(user, lessonList);
+        for (UserLessonLike userLessonLike : userLessonLikeList) {
+            int lessonId = userLessonLike.getLesson().getLessonId();
+            for (GetPopularLessonListLoginRes res : resList) {
+                if (res.getLessonId() == lessonId) {
+                    res.setLikeLesson(true);
+                }
+            }
+        }
+
+        return resList;
+    }
+
+    @Override
+    public List<GetPopularLessonListRes> getPopularLessonList(int page) {
+        PageRequest pageRequest = PageRequest.of(page - 1, 8, Sort.Direction.DESC, "likeCount");
+        Page<Lesson> lessonPage = lessonRepository.findAll(pageRequest);
+
+        List<GetPopularLessonListRes> resList = new ArrayList<>();
+        for (Lesson lesson : lessonPage) {
+            GetPopularLessonListRes res = new GetPopularLessonListRes();
             BeanUtils.copyProperties(lesson, res);
             res.setUserName(lesson.getUser().getUserName());
             resList.add(res);

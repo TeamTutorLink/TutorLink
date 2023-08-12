@@ -453,15 +453,17 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_lesson">2. Lesson</a>
 <ul class="sectlevel2">
 <li><a href="#_강의_추가">2.1. 강의 추가</a></li>
-<li><a href="#_로그인_사용자_강의_리스트">2.2. 로그인 사용자 강의 리스트</a></li>
+<li><a href="#_강의_리스트로그인">2.2. 강의 리스트(로그인)</a></li>
 <li><a href="#_강의_리스트">2.3. 강의 리스트</a></li>
-<li><a href="#_강의_이미지_다운로드">2.4. 강의 이미지 다운로드</a></li>
-<li><a href="#_로그인_사용자_강의_검색">2.5. 로그인 사용자 강의 검색</a></li>
-<li><a href="#_강의_검색">2.6. 강의 검색</a></li>
-<li><a href="#_강의_수정">2.7. 강의 수정</a></li>
-<li><a href="#_강의_삭제">2.8. 강의 삭제</a></li>
-<li><a href="#_강의_추천">2.9. 강의 추천</a></li>
-<li><a href="#_강의_추천_취소">2.10. 강의 추천 취소</a></li>
+<li><a href="#_인기_강의_리스트로그인">2.4. 인기 강의 리스트(로그인)</a></li>
+<li><a href="#_인기_강의_리스트">2.5. 인기 강의 리스트</a></li>
+<li><a href="#_강의_이미지_다운로드">2.6. 강의 이미지 다운로드</a></li>
+<li><a href="#_강의_검색로그인">2.7. 강의 검색(로그인)</a></li>
+<li><a href="#_강의_검색">2.8. 강의 검색</a></li>
+<li><a href="#_강의_수정">2.9. 강의 수정</a></li>
+<li><a href="#_강의_삭제">2.10. 강의 삭제</a></li>
+<li><a href="#_강의_추천">2.11. 강의 추천</a></li>
+<li><a href="#_강의_추천_취소">2.12. 강의 추천 취소</a></li>
 </ul>
 </li>
 <li><a href="#_user">3. User</a>
@@ -573,7 +575,7 @@ Vary: Access-Control-Request-Headers</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_로그인_사용자_강의_리스트">2.2. 로그인 사용자 강의 리스트</h3>
+<h3 id="_강의_리스트로그인">2.2. 강의 리스트(로그인)</h3>
 <div class="paragraph">
 <p>DESCRIPTION</p>
 </div>
@@ -700,7 +702,134 @@ Content-Length: 482
 </div>
 </div>
 <div class="sect2">
-<h3 id="_강의_이미지_다운로드">2.4. 강의 이미지 다운로드</h3>
+<h3 id="_인기_강의_리스트로그인">2.4. 인기 강의 리스트(로그인)</h3>
+<div class="paragraph">
+<p>DESCRIPTION</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code>로그인한 사용자의 인기 강의 리스트 요청(요청 사용자가 강의 좋아요 눌렀는지를 포함)
+헤더에 jwt 토큰을 담아야 함</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>REQUEST</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight nowrap"><code data-lang="http">GET /lessons/popular/login?page=1 HTTP/1.1
+accessToken: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjEsImlhdCI6MTY5MTU2NDQ3MiwiZXhwIjoxNjkxNTY2MjcyfQ.NRHR7IR1hyS-3rOWVtntiNgnrF_DpkYNmCwCwDUtBCQ
+Host: localhost:8080</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>RESPONSE</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight nowrap"><code data-lang="http">HTTP/1.1 200 OK
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Content-Type: application/json
+Content-Length: 612
+
+[ {
+  "lessonId" : 4,
+  "title" : "제목",
+  "userName" : "노호준",
+  "likeLesson" : false,
+  "likeCount" : 521
+}, {
+  "lessonId" : 2,
+  "title" : "제목",
+  "userName" : "노호준",
+  "likeLesson" : false,
+  "likeCount" : 123
+}, {
+  "lessonId" : 3,
+  "title" : "제목",
+  "userName" : "노호준",
+  "likeLesson" : false,
+  "likeCount" : 23
+}, {
+  "lessonId" : 5,
+  "title" : "제목",
+  "userName" : "노호준",
+  "likeLesson" : false,
+  "likeCount" : 4
+}, {
+  "lessonId" : 1,
+  "title" : "제목",
+  "userName" : "노호준",
+  "likeLesson" : false,
+  "likeCount" : 3
+} ]</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_인기_강의_리스트">2.5. 인기 강의 리스트</h3>
+<div class="paragraph">
+<p>DESCRIPTION</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code>로그인 안 한 사용자의 인기 강의 리스트 요청</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>REQUEST</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight nowrap"><code data-lang="http">GET /lessons/popular?page=1 HTTP/1.1
+Host: localhost:8080</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>RESPONSE</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight nowrap"><code data-lang="http">HTTP/1.1 200 OK
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Content-Type: application/json
+Content-Length: 487
+
+[ {
+  "lessonId" : 4,
+  "title" : "제목",
+  "userName" : "노호준",
+  "likeCount" : 521
+}, {
+  "lessonId" : 2,
+  "title" : "제목",
+  "userName" : "노호준",
+  "likeCount" : 123
+}, {
+  "lessonId" : 3,
+  "title" : "제목",
+  "userName" : "노호준",
+  "likeCount" : 23
+}, {
+  "lessonId" : 5,
+  "title" : "제목",
+  "userName" : "노호준",
+  "likeCount" : 4
+}, {
+  "lessonId" : 1,
+  "title" : "제목",
+  "userName" : "노호준",
+  "likeCount" : 3
+} ]</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_강의_이미지_다운로드">2.6. 강의 이미지 다운로드</h3>
 <div class="paragraph">
 <p>DESCRIPTION</p>
 </div>
@@ -720,7 +849,7 @@ Host: localhost:8080</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_로그인_사용자_강의_검색">2.5. 로그인 사용자 강의 검색</h3>
+<h3 id="_강의_검색로그인">2.7. 강의 검색(로그인)</h3>
 <div class="paragraph">
 <p>DESCRIPTION</p>
 </div>
@@ -791,7 +920,7 @@ Content-Length: 607
 </div>
 </div>
 <div class="sect2">
-<h3 id="_강의_검색">2.6. 강의 검색</h3>
+<h3 id="_강의_검색">2.8. 강의 검색</h3>
 <div class="paragraph">
 <p>DESCRIPTION</p>
 </div>
@@ -855,7 +984,7 @@ Content-Length: 482
 </div>
 </div>
 <div class="sect2">
-<h3 id="_강의_수정">2.7. 강의 수정</h3>
+<h3 id="_강의_수정">2.9. 강의 수정</h3>
 <div class="paragraph">
 <p>DESCRIPTION</p>
 </div>
@@ -900,7 +1029,7 @@ Vary: Access-Control-Request-Headers</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_강의_삭제">2.8. 강의 삭제</h3>
+<h3 id="_강의_삭제">2.10. 강의 삭제</h3>
 <div class="paragraph">
 <p>DESCRIPTION</p>
 </div>
@@ -932,7 +1061,7 @@ Vary: Access-Control-Request-Headers</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_강의_추천">2.9. 강의 추천</h3>
+<h3 id="_강의_추천">2.11. 강의 추천</h3>
 <div class="paragraph">
 <p>DESCRIPTION</p>
 </div>
@@ -964,7 +1093,7 @@ Vary: Access-Control-Request-Headers</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_강의_추천_취소">2.10. 강의 추천 취소</h3>
+<h3 id="_강의_추천_취소">2.12. 강의 추천 취소</h3>
 <div class="paragraph">
 <p>DESCRIPTION</p>
 </div>
@@ -1146,7 +1275,7 @@ Vary: Access-Control-Request-Headers</code></pre>
 <div id="footer">
 <div id="footer-text">
 Version 0.0.1-SNAPSHOT<br>
-Last updated 2023-07-28 14:09:23 +0900
+Last updated 2023-08-09 16:13:40 +0900
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css">

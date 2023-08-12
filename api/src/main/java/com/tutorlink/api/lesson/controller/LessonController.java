@@ -3,10 +3,7 @@ package com.tutorlink.api.lesson.controller;
 import com.tutorlink.api.auth.annotation.LoginRequired;
 import com.tutorlink.api.lesson.dto.request.AddLessonReq;
 import com.tutorlink.api.lesson.dto.request.UpdateLessonReq;
-import com.tutorlink.api.lesson.dto.response.GetLessonListLoginRes;
-import com.tutorlink.api.lesson.dto.response.GetLessonListRes;
-import com.tutorlink.api.lesson.dto.response.SearchLessonLoginRes;
-import com.tutorlink.api.lesson.dto.response.SearchLessonRes;
+import com.tutorlink.api.lesson.dto.response.*;
 import com.tutorlink.api.lesson.exception.ImageNotFoundException;
 import com.tutorlink.api.lesson.exception.LessonNotFoundException;
 import com.tutorlink.api.lesson.exception.NotTeacherException;
@@ -67,6 +64,25 @@ public class LessonController {
     public ResponseEntity<Object> getLessonList(@RequestParam int page) {
 
         List<GetLessonListRes> resList = lessonService.getLessonList(page);
+
+        return ResponseEntity.ok(resList);
+    }
+
+    @GetMapping("/popular/login")
+    @LoginRequired
+    public ResponseEntity<Object> getPopularLessonListLogin(HttpServletRequest servletRequest,
+                                                     @RequestParam int page) {
+
+        User user = (User) servletRequest.getAttribute("user");
+        List<GetPopularLessonListLoginRes> resList = lessonService.getPopularLessonListLogin(user, page);
+
+        return ResponseEntity.ok(resList);
+    }
+
+    @GetMapping("/popular")
+    public ResponseEntity<Object> getPopularLessonList(@RequestParam int page) {
+
+        List<GetPopularLessonListRes> resList = lessonService.getPopularLessonList(page);
 
         return ResponseEntity.ok(resList);
     }
