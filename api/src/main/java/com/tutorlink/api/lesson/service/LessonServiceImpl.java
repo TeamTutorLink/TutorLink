@@ -21,6 +21,8 @@ import com.tutorlink.api.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -50,6 +52,7 @@ public class LessonServiceImpl implements LessonService {
 
     @Override
     @Transactional
+    @CacheEvict(value = "getLessonList", key = "1")
     public Lesson addLesson(User user, AddLessonReq req, MultipartFile imageFile) throws IOException, NoSuchAlgorithmException, NotTeacherException {
         if (user.getUserType() != UserType.TEACHER) {
             throw new NotTeacherException();
@@ -106,6 +109,7 @@ public class LessonServiceImpl implements LessonService {
     }
 
     @Override
+    @Cacheable(value = "getLessonList", key = "#page", condition = "#page == 1")
     public List<GetLessonListRes> getLessonList(int page) {
         PageRequest pageRequest = PageRequest.of(page - 1, 8, Sort.Direction.DESC, "lessonId");
         Page<Lesson> lessonPage = lessonRepository.findAll(pageRequest);
@@ -149,6 +153,7 @@ public class LessonServiceImpl implements LessonService {
     }
 
     @Override
+    @Cacheable(value = "getPopularLessonList", key = "#page", condition = "#page == 1")
     public List<GetPopularLessonListRes> getPopularLessonList(int page) {
         PageRequest pageRequest = PageRequest.of(page - 1, 8, Sort.Direction.DESC, "likeCount");
         Page<Lesson> lessonPage = lessonRepository.findAll(pageRequest);
