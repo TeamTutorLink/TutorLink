@@ -48,6 +48,7 @@ public class ExceptionControllerAdvice {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler
     public ErrorResponse exceptionHandle(Exception e) {
+        e.printStackTrace();
         return new ErrorResponse("500", "서버 에러");
     }
 }
