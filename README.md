@@ -32,6 +32,8 @@
 
 - Websocket
 
+- Redis
+
 - Rest Docs
 
 
@@ -47,6 +49,7 @@
 ##### 과외
 
 - CRUD
+- 조회 캐싱
 - 검색 기능
 - 좋아요 기능
 
